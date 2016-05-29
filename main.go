@@ -2,26 +2,36 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"os"
 
-	"github.com/asta-luego/n-puzzle/pkg"
+	"github.com/apex/log"
+	"github.com/apex/log/handlers/text"
+	"github.com/asta-luego/npuzzle/pkg/taquin"
 )
 
-func main() {
-	var t taquin.Taquin
-	flag.BoolVar(&t.Verbose, "v", false, "mode verbose")
+var verbose bool
+
+func init() {
+	log.SetHandler(text.New(os.Stderr))
+	flag.BoolVar(&verbose, "v", false, "mode verbose")
 	flag.Parse()
+}
 
-	if len(flag.Args()) == 0 {
-		flag.Usage()
-		fmt.Println("  [file ...]")
+func main() {
+	nbfile := len(flag.Args())
+
+	if nbfile == 0 {
+		log.Error("Please give me a filename")
 	} else {
-		if t.Verbose == true {
-			fmt.Println("INITIALISATION")
-			fmt.Println("Mode verbose : ", t.Verbose)
-			fmt.Println("Filename : ", flag.Args())
+		if verbose {
+			os.Setenv("TAQUIN_VERBOSE", "1")
 		}
-		t.Keepfiles(flag.Args())
+		t := make([]taquin.Taquin, nbfile)
+		for i, filename := range flag.Args() {
+			t[i].Keepfiles(filename)
+			if err := t[i].CheckTaquin(); err != nil {
+				log.Errorf("%v", err)
+			}
+		}
 	}
-
 }
