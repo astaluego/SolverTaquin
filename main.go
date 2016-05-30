@@ -21,17 +21,17 @@ func main() {
 	nbfile := len(flag.Args())
 
 	if nbfile == 0 {
-		log.Error("Please give me a filename")
-	} else {
-		if verbose {
-			os.Setenv("TAQUIN_VERBOSE", "1")
-		}
-		t := make([]taquin.Taquin, nbfile)
-		for i, filename := range flag.Args() {
-			t[i].Keepfiles(filename)
-			if err := t[i].CheckTaquin(); err != nil {
-				log.Errorf("%v", err)
-			}
+		log.Fatal("Please give me a filename")
+	}
+	if verbose {
+		os.Setenv("TAQUIN_VERBOSE", "1")
+	}
+	t := make([]taquin.Taquin, nbfile)
+	for i, filename := range flag.Args() {
+		if err := t[i].Parse(filename); err != nil {
+			log.Errorf("Invalid map %v : %v", filename, err)
+		} else if err = t[i].CheckTaquin(); err != nil {
+			log.Errorf("Invalid map %v : %v", filename, err)
 		}
 	}
 }
