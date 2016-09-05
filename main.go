@@ -30,8 +30,11 @@ func main() {
 	for i, filename := range flag.Args() {
 		if err := t[i].Parse(filename); err != nil {
 			log.Errorf("Invalid map %v : %v", filename, err)
-		} else if err = t[i].CheckTaquin(); err != nil {
+		} else if err = t[i].CheckErrorParsingTaquin(); err != nil {
+			log.Errorf("Invalid map %v : %v", filename, err)
+		} else if err = t[i].CheckValidityTaquin(); err != nil {
 			log.Errorf("Invalid map %v : %v", filename, err)
 		}
+		//t[i].PrintBoard()
 	}
 }
