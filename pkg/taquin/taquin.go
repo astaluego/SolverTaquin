@@ -92,10 +92,10 @@ func (t *Taquin) Parse(filename string) error {
 	if t.Size != nblines {
 		return fmt.Errorf("Missing line(s) in the map")
 	}
-	t.MakeGoalBoard()
-	//fmt.Println(t.Board)
-	//fmt.Println(t.GoalBoard)
 	//fmt.Println(t.EmptyCase)
+	t.MakeGoalBoard()
+	t.PrintBoard(t.GoalBoard)
+	t.PrintBoard(t.Board)
 	return nil
 }
 
@@ -185,7 +185,7 @@ func (t *Taquin) TranspositionInLineTaquin(board [][]int) []int {
 	return boardInLine
 }
 
-// Inversions calculate inversions
+// Inversions calculate the number of inversions
 func (t *Taquin) Inversions(board []int) (int, int) {
 	var i = 0
 	var posZero = 0
@@ -229,8 +229,14 @@ func (t *Taquin) CheckValidityTaquin() error {
 }
 
 // PrintBoard print board
-func (t *Taquin) PrintBoard() {
-	for line := range t.Board {
-		fmt.Println(line)
+//TODO
+func (t *Taquin) PrintBoard(board [][]int) {
+	var size = len(strconv.Itoa(t.Size * t.Size))
+	fmt.Print("\n")
+	for line := range board {
+		for column := range board[line] {
+			fmt.Printf("%*d", (size+1)*(-1), board[line][column])
+		}
+		fmt.Print("\n")
 	}
 }
